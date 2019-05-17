@@ -1,10 +1,10 @@
-function [ks] = plotarLGR(FT, zwn, wn, b, limx, limy)
+function [ks] = plotarLGR(FT, ts, tr, Mp, limx, limy)
 % Plota LGR com RSDS.
 %   ks = os ganhos da LGR (retorno).
-%   FT = a função de transferência já em MF
-%   zwn = o valor de - zeta * wn (reta vertical da RSDS)
-%   wn = o valor do raio do círculo da RSDS
-%   b = o ângulo beta, para retas inclinadas da RSDS
+%   FT = a função de transferência em MA
+%   ts = tempo de acomodação [seg] (reta vertical da RSDS)
+%   tr = tempo de subida [seg], para gerar o valor do raio do semicírculo da RSDS
+%   Mp = Máxima sobreelevação percentual [%], para retas inclinadas da RSDS
 %   limx e limy = limites do gráfico, exemplo limx = [-9 1]; limy = [-5 5]
 
 colortab = [[0, 0.4470, 0.7410]
@@ -14,6 +14,11 @@ colortab = [[0, 0.4470, 0.7410]
           	[0.4660, 0.6740, 0.1880]
           	[0.3010, 0.7450, 0.9330]
           	[0.6350, 0.0780, 0.1840]];
+
+%dados
+b = acosd(0.6 * (1 - Mp / 100));
+zwn = -4 / ts;
+wn = 1.8 / tr;
 
 % Root Locus
 [lgrs, ks] = rlocus(FT);
@@ -39,7 +44,7 @@ m1 = tan(b1);
 m2 = tan(b2);
 
 hold on
-%is not a valid value. Use one of these values: '-' | '--' | ':' | '-.' | 'none'.
+%Use one of these values: '-' | '--' | ':' | '-.' | 'none'.
 line([limx(1) limx(2)],[0 0], 'Color', colortab(6,:), 'Linestyle', '--')
 line([0 0],[limy(1) limy(2)], 'Color', colortab(6,:), 'Linestyle', '--')
 
